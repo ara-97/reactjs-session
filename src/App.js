@@ -1,59 +1,110 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-import Child from './components/Child';
+export default function App() {
+  // eslint-disable-next-line no-undef
+  const [name, setName] = useState('');
+  const [roll, setROll] = useState('');
+  const [rows, setRows] = useState([
+    {
+      name: 'aadsa',
+      rollNo: '213r'
+    },
+    {
+      name: 'fdnkmls',
+      rollNo: '213r'
+    },
+    {
+      name: 'efmlemw',
+      rollNo: '213r'
+    },
+    {
+      name: '2ejwnkn',
+      rollNo: '213r'
+    },
+    {
+      name: 'gtniorgknfl',
+      rollNo: '213r'
+    }
+  ]);
 
-import './App.css';
-
-class App extends Component {
-  constructor() {
-    console.log('constructor');
-    super();
-    this.state = {
-      count: 2,
-      show: false
-    };
-  }
-
-  doIncrement = () => {
-    this.setState({ count: this.state.count + 1 });
+  const handleInputs = e => {
+    if (e.target.name == 'name') {
+      setName(e.target.value);
+    } else {
+      setROll(e.target.value);
+    }
   };
 
-  componentDidUpdate = () => {
-    console.log('update...');
+  const add = () => {
+    rows.push({ name: name, rollNo: roll });
+    setName('');
+    setROll('');
   };
 
-  componentDidMount = () => {
-    console.log('mounted');
+  const edit = index => {
+    setName(rows[index].name);
+    setROll(rows[index].rollNo);
   };
 
-  toggleComp = () => {
-    this.setState({ show: !this.state.show });
+  const save = index => {
+    if (name && roll) {
+      let updatedRows = [...rows];
+      updatedRows[index].name = name;
+      updatedRows[index].rollNo = roll;
+      setRows(updatedRows);
+      setName('');
+      setROll('');
+    }
   };
 
-  render() {
-    console.log('render');
+  const doDelete = index => {
+    let updatedRows = [...rows];
+    updatedRows.splice(index, 1);
+    setRows(updatedRows);
+  };
 
-    return (
-      <div className="App">
-        {this.state.show ? <Child1 /> : null}
-        <button onClick={this.toggleComp}>Toggle</button>
+  return (
+    <div>
+      <table>
+        <tr>
+          <td>Name</td>
+          <td>Roll No</td>
+          <td>Edit/Save</td>
+          <td>Delete</td>
+        </tr>
+        {rows.map((r, rIndex) => (
+          <tr>
+            <td>{r.name}</td>
+            <td>{r.rollNo}</td>
+            <td>
+              <button onClick={() => edit(rIndex)}>Edit</button>
+              <button onClick={() => save(rIndex)}>save</button>
+            </td>
+            <td>
+              <button onClick={() => doDelete(rIndex)}>Delete</button>
+            </td>
+          </tr>
+        ))}
+      </table>
+      <div className="inputs">
+        <input
+          type="text"
+          placeholder="Name"
+          name={'name'}
+          value={name}
+          onChange={handleInputs}
+        />
+        <input
+          type="text"
+          placeholder="Roll No"
+          name={'roll'}
+          value={roll}
+          onChange={handleInputs}
+        />
+        <button className="add" onClick={add}>
+          add
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
 }
-
-class Child1 extends Component {
-  constructor(props) {
-    super();
-  }
-
-  componentWillUnmount = () => {
-    console.log('unmounting..');
-  };
-
-  render() {
-    return <div>Child</div>;
-  }
-}
-
-export default App;
