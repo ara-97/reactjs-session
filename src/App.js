@@ -1,110 +1,108 @@
-import React, { useState } from 'react';
+import React, { useState, Component } from 'react';
 
-export default function App() {
-  // eslint-disable-next-line no-undef
-  const [name, setName] = useState('');
-  const [roll, setROll] = useState('');
-  const [rows, setRows] = useState([
-    {
-      name: 'aadsa',
-      rollNo: '213r'
-    },
-    {
-      name: 'fdnkmls',
-      rollNo: '213r'
-    },
-    {
-      name: 'efmlemw',
-      rollNo: '213r'
-    },
-    {
-      name: '2ejwnkn',
-      rollNo: '213r'
-    },
-    {
-      name: 'gtniorgknfl',
-      rollNo: '213r'
-    }
-  ]);
+export default class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      tableData: [
+        {
+          name: 'ara',
+          roll: 127213
+        },
+        {
+          name: 'ara1',
+          roll: 127213
+        },
+        {
+          name: 'ara2',
+          roll: 127213
+        },
+        {
+          name: 'ara3',
+          roll: 127213
+        }
+      ],
+      name: '',
+      roll: ''
+    };
+  }
 
-  const handleInputs = e => {
-    if (e.target.name == 'name') {
-      setName(e.target.value);
-    } else {
-      setROll(e.target.value);
-    }
+  add = () => {
+    let arr = this.state.tableData;
+    arr.push({ name: this.state.name, roll: this.state.roll });
+    this.setState({ tableData: arr, name: '', roll: '' });
   };
 
-  const add = () => {
-    rows.push({ name: name, rollNo: roll });
-    setName('');
-    setROll('');
+  edit = index => {
+    this.setState({
+      name: this.state.tableData[index].name,
+      roll: this.state.tableData[index].roll
+    });
   };
 
-  const edit = index => {
-    setName(rows[index].name);
-    setROll(rows[index].rollNo);
+  save = index => {
+    let arr = this.state.tableData;
+    arr[index].name = this.state.name;
+    arr[index].roll = this.state.roll;
+    this.setState({ tableData: arr });
   };
 
-  const save = index => {
-    if (name && roll) {
-      let updatedRows = [...rows];
-      updatedRows[index].name = name;
-      updatedRows[index].rollNo = roll;
-      setRows(updatedRows);
-      setName('');
-      setROll('');
-    }
+  doDelete = index => {
+    let arr = this.state.tableData;
+    arr.splice(index, 1);
+    this.setState({ tableData: arr });
   };
 
-  const doDelete = index => {
-    let updatedRows = [...rows];
-    updatedRows.splice(index, 1);
-    setRows(updatedRows);
+  onChangeHandler = e => {
+    this.setState({ [e.target.name]: e.target.value });
   };
 
-  return (
-    <div>
-      <table>
-        <tr>
-          <td>Name</td>
-          <td>Roll No</td>
-          <td>Edit/Save</td>
-          <td>Delete</td>
-        </tr>
-        {rows.map((r, rIndex) => (
-          <tr>
-            <td>{r.name}</td>
-            <td>{r.rollNo}</td>
-            <td>
-              <button onClick={() => edit(rIndex)}>Edit</button>
-              <button onClick={() => save(rIndex)}>save</button>
-            </td>
-            <td>
-              <button onClick={() => doDelete(rIndex)}>Delete</button>
-            </td>
-          </tr>
-        ))}
-      </table>
-      <div className="inputs">
-        <input
-          type="text"
-          placeholder="Name"
-          name={'name'}
-          value={name}
-          onChange={handleInputs}
-        />
-        <input
-          type="text"
-          placeholder="Roll No"
-          name={'roll'}
-          value={roll}
-          onChange={handleInputs}
-        />
-        <button className="add" onClick={add}>
-          add
-        </button>
+  render() {
+    return (
+      <div>
+        <table>
+          <thead>
+            <tr>
+              <td>NAME</td>
+              <td>ROLL NO</td>
+              <td>EDIT/SAVE</td>
+              <td>DELETE</td>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.tableData.map((tData, tIndex) => (
+              <tr key={tIndex}>
+                <td>{tData.name}</td>
+                <td>{tData.roll}</td>
+                <td>
+                  <button onClick={() => this.edit(tIndex)}>Edit</button>
+                  <button onClick={() => this.save(tIndex)}>Save</button>
+                </td>
+                <td>
+                  <button onClick={() => this.doDelete(tIndex)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div>
+          <input
+            placeholder="Name"
+            name="name"
+            value={this.state.name}
+            onChange={this.onChangeHandler}
+          />
+          <input
+            placeholder="Roll No"
+            name="roll"
+            value={this.state.roll}
+            onChange={this.onChangeHandler}
+          />
+          <button className="add" onClick={this.add}>
+            Add
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
